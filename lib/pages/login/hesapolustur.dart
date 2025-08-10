@@ -37,7 +37,7 @@ class HesapOlusturSayfasi extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           shadows: [
                             Shadow(
-                              color: Colors.grey.withOpacity(0.5),
+                         color: Color.fromRGBO(158, 158, 158, 0.5),
                               blurRadius: 10,
                               offset: const Offset(0, 0),
                             ),
@@ -119,8 +119,8 @@ class HesapOlusturSayfasi extends StatelessWidget {
                         // Hesap Oluştur
                         ElevatedButton(
                           onPressed: () {
-                            // TODO: Hesap oluşturma işlemi
-                          },
+                          // Hesap oluşturma işlemi
+                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(

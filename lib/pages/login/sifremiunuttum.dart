@@ -35,7 +35,7 @@ class GirisSorunuSayfasi extends StatelessWidget {
                         fontSize: screenWidth * 0.12,
                         shadows: [
                           Shadow(
-                            color: Colors.grey.withOpacity(0.5),
+                          color: Color.fromRGBO(158, 158, 158, 0.5),
                             blurRadius: 10,
                             offset: const Offset(0, 0),
                           ),
