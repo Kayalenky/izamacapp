@@ -1,0 +1,454 @@
+import 'package:flutter/material.dart';
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  final _prodCtrl = PageController();
+  final _promoCtrl = PageController();
+  int _prodIndex = 0;
+  int _promoIndex = 0;
+
+  final _productImages = const [
+    'https://images.unsplash.com/photo-1581091215367-59ab6b321416?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1581090700227-1e37b190418e?q=80&w=1200&auto=format&fit=crop',
+  ];
+
+  final _promoImages = const [
+    'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    const bg = Color(0xFF111111);
+    const card = Color(0xFF1B1B1B);
+    const green = Color(0xFF62E88D);
+
+    return Scaffold(
+      backgroundColor: bg,
+      body: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const _Header(green: green),
+
+            // PRODUCT SLIDER + TITLE + DESC
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: card,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    _Carousel(
+                      height: 240,
+                      controller: _prodCtrl,
+                      images: _productImages,
+                      onChanged: (i) => setState(() => _prodIndex = i),
+                      pillTopRight: const _InfoPill(
+                        text: 'PCM SERİSİ\nDÜŞÜK ENERJİ &\nYÜKSEK KAPASİTE',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'GERİ DÖNÜŞÜM\nMAKİNELERİNDE ÖNCÜ MARKA',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        height: 1.2,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'İZA MAKİNA geri dönüşüm tesislerinde kullanılan makineler ve bu makinelere ait yedek parçaların imalatını yapmak amacı ile kurulmuştur.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                    ),
+                    const SizedBox(height: 4),
+                    _Dots(count: _productImages.length, index: _prodIndex),
+                  ],
+                ),
+              ),
+            ),
+
+            // PROMO SLIDER (biraz daraltıldı)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: Column(
+                children: [
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Tanıtım Günleri',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  _Carousel(
+                    height: 140, // 160 -> 140
+                    controller: _promoCtrl,
+                    images: _promoImages,
+                    onChanged: (i) => setState(() => _promoIndex = i),
+                  ),
+                  const SizedBox(height: 4),
+                  _Dots(count: _promoImages.length, index: _promoIndex),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 8),
+            const Divider(color: Colors.white24, thickness: 0.6, indent: 14, endIndent: 14),
+
+            // CONTACT (daraltıldı)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Text(
+                    'Bir projeniz mi var?',
+                    style: TextStyle(color: Colors.white70),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'Bizimle iletişime geçin.',
+                    style: TextStyle(color: green, fontSize: 13),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 8),
+
+                  _ContactLine(icon: Icons.phone, text: '+90 364 606 06 22'),
+                  _ContactLine(icon: Icons.phone, text: '+90 532 566 69 89'),
+                  _ContactLine(icon: Icons.email, text: 'iza@izamakina.com'),
+
+                  SizedBox(height: 10),
+                ],
+              ),
+            ),
+
+            // Sosyal ikonlar
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                _SocialDot(icon: Icons.facebook),
+                _SocialDot(icon: Icons.chat_bubble),
+                _SocialDot(icon: Icons.language),
+                _SocialDot(icon: Icons.camera_alt),
+                _SocialDot(icon: Icons.ondemand_video),
+              ],
+            ),
+            const SizedBox(height: 6),
+          ],
+        ),
+      ),
+
+      // CUSTOM BOTTOM BAR
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+        decoration: const BoxDecoration(
+          color: Color(0xFF262626),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              _RoundNavIcon(icon: Icons.person),
+              _RoundNavIcon(icon: Icons.qr_code_2),
+              _RoundNavIcon(icon: Icons.home_filled, selected: true),
+              _RoundNavIcon(icon: Icons.settings_suggest),
+              _RoundNavIcon(icon: Icons.menu),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/* ===================== WIDGETS ===================== */
+
+class _Header extends StatelessWidget {
+  const _Header({required this.green});
+  final Color green;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        AspectRatio(
+          aspectRatio: 16 / 7, // 16/9'dan daha dar
+          child: ColorFiltered(
+            colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.darken),
+            child: Image.network(
+              'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1600&auto=format&fit=crop',
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+            ),
+          ),
+        ),
+        Positioned.fill(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // logo
+              Container(
+                width: 72,
+                height: 72,
+                decoration: const BoxDecoration(
+                  color: Colors.white24,
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: const Text(
+                  'İZA',
+                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // hoş geldin kapsülü
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(color: Colors.white24),
+                ),
+                child: const Text(
+                  'Hoş geldin, Kullanıcı/Misafir',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Carousel extends StatelessWidget {
+  const _Carousel({
+    required this.height,
+    required this.controller,
+    required this.images,
+    required this.onChanged,
+    this.pillTopRight,
+  });
+
+  final double height;
+  final PageController controller;
+  final List<String> images;
+  final void Function(int) onChanged;
+  final Widget? pillTopRight;
+
+  @override
+  Widget build(BuildContext context) {
+    const card = Color(0xFF1B1B1B);
+    return Stack(
+      children: [
+        SizedBox(
+          height: height,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: PageView.builder(
+              controller: controller,
+              onPageChanged: onChanged,
+              itemCount: images.length,
+              itemBuilder: (_, i) => Image.network(images[i], fit: BoxFit.cover),
+            ),
+          ),
+        ),
+        Positioned.fill(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _ArrowButton(
+                icon: Icons.chevron_left,
+                onTap: () {
+                  controller.previousPage(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeOut,
+                  );
+                },
+              ),
+              _ArrowButton(
+                icon: Icons.chevron_right,
+                onTap: () {
+                  controller.nextPage(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeOut,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        if (pillTopRight != null)
+          Positioned(
+            top: 10,
+            right: 10,
+            child: Container(
+              decoration: BoxDecoration(
+                color: card.withOpacity(.9),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: pillTopRight,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _ArrowButton extends StatelessWidget {
+  const _ArrowButton({required this.icon, required this.onTap});
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.4),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 20),
+      ),
+    );
+  }
+}
+
+class _InfoPill extends StatelessWidget {
+  const _InfoPill({required this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      textAlign: TextAlign.right,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 12.5,
+        height: 1.25,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
+
+class _Dots extends StatelessWidget {
+  const _Dots({required this.count, required this.index});
+  final int count;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        count,
+        (i) => Container(
+          width: 6,
+          height: 6,
+          margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: i == index ? Colors.white : Colors.white24,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ContactLine extends StatelessWidget {
+  const _ContactLine({required this.icon, required this.text});
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4), // 6 -> 4
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.white24, width: .5)), // .6 -> .5
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(icon, color: Colors.white70, size: 16), // 18 -> 16
+          const SizedBox(width: 8),
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white70,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SocialDot extends StatelessWidget {
+  const _SocialDot({required this.icon});
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 28,
+      margin: const EdgeInsets.only(right: 8),
+      decoration: const BoxDecoration(color: Colors.white12, shape: BoxShape.circle),
+      child: Icon(icon, color: Colors.white, size: 16),
+    );
+  }
+}
+
+class _RoundNavIcon extends StatelessWidget {
+  const _RoundNavIcon({required this.icon, this.selected = false});
+  final IconData icon;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected ? const Color(0xFF62E88D) : Colors.white70;
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(.35),
+        shape: BoxShape.circle,
+        border: Border.all(color: selected ? color : Colors.white24),
+      ),
+      child: Icon(icon, color: color),
+    );
+  }
+}
