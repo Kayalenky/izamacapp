@@ -277,7 +277,7 @@ class _ArrowBtn extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(.35),
+          color: const Color.fromRGBO(0, 0, 0, 0.35),
           shape: BoxShape.circle,
           border: Border.all(color: Colors.white24),
         ),
@@ -308,7 +308,7 @@ class _BottomIcon extends StatelessWidget {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(.35),
+          color: const Color.fromRGBO(0, 0, 0, 0.35),
           shape: BoxShape.circle,
           border: Border.all(color: selected ? color : Colors.white24),
         ),

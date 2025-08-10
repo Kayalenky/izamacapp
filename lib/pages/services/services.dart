@@ -177,7 +177,6 @@ class _BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const green = Color(0xFF62E88D);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
@@ -232,7 +231,7 @@ class _RoundNavIcon extends StatelessWidget {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(.35),
+          color: const Color.fromRGBO(0, 0, 0, 0.35),
           shape: BoxShape.circle,
           border: Border.all(color: selected ? color : Colors.white24),
         ),

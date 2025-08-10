@@ -7,7 +7,6 @@ class MachineInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const bg = Color(0xFF111111);
-    const green = Color(0xFF62E88D);
 
     return Scaffold(
       backgroundColor: bg,
@@ -87,13 +86,12 @@ class _GreenDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const green = Color(0xFF62E88D);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
       child: Container(
         height: 1,
         decoration: BoxDecoration(
-          color: green.withOpacity(.7),
+          color: const Color.fromRGBO(98, 232, 141, 0.7),
           borderRadius: BorderRadius.circular(1),
         ),
       ),
@@ -293,7 +291,7 @@ class _RoundNavIcon extends StatelessWidget {
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(.35),
+      color: const Color.fromRGBO(0, 0, 0, 0.35),
         shape: BoxShape.circle,
         border: Border.all(color: selected ? color : Colors.white24),
       ),

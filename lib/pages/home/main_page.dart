@@ -259,7 +259,6 @@ class _Carousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const card = Color(0xFF1B1B1B);
     return Stack(
       children: [
         SizedBox(
@@ -305,7 +304,7 @@ class _Carousel extends StatelessWidget {
             right: 10,
             child: Container(
               decoration: BoxDecoration(
-                color: card.withOpacity(.9),
+                color: const Color.fromRGBO(18, 52, 86, 0.9),
                 borderRadius: BorderRadius.circular(6),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -331,7 +330,7 @@ class _ArrowButton extends StatelessWidget {
         height: 36,
         margin: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.4),
+        color: const Color.fromRGBO(0, 0, 0, 0.4),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: Colors.white, size: 20),
@@ -444,7 +443,7 @@ class _RoundNavIcon extends StatelessWidget {
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(.35),
+        color: const Color.fromRGBO(0, 0, 0, 0.35),
         shape: BoxShape.circle,
         border: Border.all(color: selected ? color : Colors.white24),
       ),

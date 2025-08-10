@@ -7,7 +7,6 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const bg = Color(0xFF111111);
-    const green = Color(0xFF62E88D);
 
     return Scaffold(
       backgroundColor: bg,
@@ -121,7 +120,7 @@ class _SettingsItemRow extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white54),
-              color: Colors.black.withOpacity(.25),
+              color: const Color.fromRGBO(0, 0, 0, 0.25),
             ),
             child: Icon(icon, color: Colors.white, size: 20),
           ),
@@ -175,9 +174,9 @@ class _BottomIcon extends StatelessWidget {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(.35),
-          shape: BoxShape.circle,
-          border: Border.all(color: selected ? color : Colors.white24),
+        color: const Color.fromRGBO(0, 0, 0, 0.35),
+        shape: BoxShape.circle,
+        border: Border.all(color: selected ? color : Colors.white24),
         ),
         child: Icon(icon, color: color),
       ),

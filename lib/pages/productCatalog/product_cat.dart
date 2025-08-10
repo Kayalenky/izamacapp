@@ -51,7 +51,6 @@ class _ProductCatalogPageState extends State<ProductCatalogPage> {
   Widget build(BuildContext context) {
     const bg = Color(0xFF111111);
     const card = Color(0xFF1B1B1B);
-    const green = Color(0xFF62E88D);
 
     final filtered = _all
         .where((p) =>
@@ -291,7 +290,7 @@ class _RoundNavIcon extends StatelessWidget {
       width: 44,
       height: 44,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(.35),
+        color: const Color.fromRGBO(0, 0, 0, 0.35),
         shape: BoxShape.circle,
         border: Border.all(color: selected ? color : Colors.white24),
       ),
