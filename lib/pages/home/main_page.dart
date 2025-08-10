@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+// lib/pages/home/main_page.dart (en üst kısım)
+import 'package:izamacapp/pages/aboutus/about_us.dart';
+import 'package:izamacapp/pages/productCatalog/product_cat.dart';
+import 'package:izamacapp/pages/services/services.dart';
+import 'package:izamacapp/pages/settings/settings.dart';
+
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -23,6 +30,88 @@ class _MainPageState extends State<MainPage> {
     'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop',
   ];
+
+  // ── MENÜ BOTTOM SHEET
+  void _openMenu() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1B1B1B),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        const green = Color(0xFF62E88D);
+
+        Widget item({
+          required IconData icon,
+          required String title,
+          required VoidCallback onTap,
+        }) {
+          return ListTile(
+            leading: Icon(icon, color: Colors.white),
+            title: Text(title,
+                style: const TextStyle(color: Colors.white, fontSize: 16)),
+            trailing: const Icon(Icons.chevron_right, color: green),
+            onTap: () {
+              Navigator.pop(ctx);
+              onTap();
+            },
+          );
+        }
+
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 42,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                item(
+                  icon: Icons.info_outline,
+                  title: 'Hakkımızda',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const AboutUsPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.view_module_rounded,
+                  title: 'Ürün Kataloğu',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) => const ProductCatalogPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.handyman_outlined,
+                  title: 'Hizmetlerimiz',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ServicesPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.settings_suggest,
+                  title: 'Ayarlar',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SettingsPage()),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +187,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   const SizedBox(height: 6),
                   _Carousel(
-                    height: 140, // 160 -> 140
+                    height: 140,
                     controller: _promoCtrl,
                     images: _promoImages,
                     onChanged: (i) => setState(() => _promoIndex = i),
@@ -110,7 +199,8 @@ class _MainPageState extends State<MainPage> {
             ),
 
             const SizedBox(height: 8),
-            const Divider(color: Colors.white24, thickness: 0.6, indent: 14, endIndent: 14),
+            const Divider(
+                color: Colors.white24, thickness: 0.6, indent: 14, endIndent: 14),
 
             // CONTACT (daraltıldı)
             Padding(
@@ -126,7 +216,7 @@ class _MainPageState extends State<MainPage> {
                   SizedBox(height: 2),
                   Text(
                     'Bizimle iletişime geçin.',
-                    style: TextStyle(color: green, fontSize: 13),
+                    style: TextStyle(color: Color(0xFF62E88D), fontSize: 13),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 8),
@@ -167,12 +257,16 @@ class _MainPageState extends State<MainPage> {
           top: false,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              _RoundNavIcon(icon: Icons.person),
-              _RoundNavIcon(icon: Icons.qr_code_2),
-              _RoundNavIcon(icon: Icons.home_filled, selected: true),
-              _RoundNavIcon(icon: Icons.settings_suggest),
-              _RoundNavIcon(icon: Icons.menu),
+            children: [
+              const _RoundNavIcon(icon: Icons.person),
+              const _RoundNavIcon(icon: Icons.qr_code_2),
+              const _RoundNavIcon(icon: Icons.home_filled, selected: true),
+              const _RoundNavIcon(icon: Icons.settings_suggest),
+              // MENÜ İKONU — bottom sheet
+              GestureDetector(
+                onTap: _openMenu,
+                child: const _RoundNavIcon(icon: Icons.menu),
+              ),
             ],
           ),
         ),
@@ -192,9 +286,10 @@ class _Header extends StatelessWidget {
     return Stack(
       children: [
         AspectRatio(
-          aspectRatio: 16 / 7, // 16/9'dan daha dar
+          aspectRatio: 16 / 7,
           child: ColorFiltered(
-            colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.darken),
+            colorFilter:
+                const ColorFilter.mode(Colors.black54, BlendMode.darken),
             child: Image.network(
               'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1600&auto=format&fit=crop',
               fit: BoxFit.cover,
@@ -206,7 +301,6 @@ class _Header extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // logo
               Container(
                 width: 72,
                 height: 72,
@@ -217,13 +311,16 @@ class _Header extends StatelessWidget {
                 alignment: Alignment.center,
                 child: const Text(
                   'İZA',
-                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 8),
-              // hoş geldin kapsülü
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.white10,
                   borderRadius: BorderRadius.circular(22),
@@ -269,7 +366,8 @@ class _Carousel extends StatelessWidget {
               controller: controller,
               onPageChanged: onChanged,
               itemCount: images.length,
-              itemBuilder: (_, i) => Image.network(images[i], fit: BoxFit.cover),
+              itemBuilder: (_, i) =>
+                  Image.network(images[i], fit: BoxFit.cover),
             ),
           ),
         ),
@@ -307,7 +405,8 @@ class _Carousel extends StatelessWidget {
                 color: const Color.fromRGBO(18, 52, 86, 0.9),
                 borderRadius: BorderRadius.circular(6),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: pillTopRight,
             ),
           ),
@@ -330,7 +429,7 @@ class _ArrowButton extends StatelessWidget {
         height: 36,
         margin: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
-        color: const Color.fromRGBO(0, 0, 0, 0.4),
+          color: const Color.fromRGBO(0, 0, 0, 0.4),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: Colors.white, size: 20),
@@ -372,7 +471,8 @@ class _Dots extends StatelessWidget {
         (i) => Container(
           width: 6,
           height: 6,
-          margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+          margin:
+              const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: i == index ? Colors.white : Colors.white24,
@@ -391,15 +491,16 @@ class _ContactLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4), // 6 -> 4
+      padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.white24, width: .5)), // .6 -> .5
+        border:
+            Border(bottom: BorderSide(color: Colors.white24, width: .5)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.white70, size: 16), // 18 -> 16
+          Icon(icon, color: Colors.white70, size: 16),
           const SizedBox(width: 8),
           Text(
             text,
@@ -425,7 +526,8 @@ class _SocialDot extends StatelessWidget {
       width: 28,
       height: 28,
       margin: const EdgeInsets.only(right: 8),
-      decoration: const BoxDecoration(color: Colors.white12, shape: BoxShape.circle),
+      decoration: const BoxDecoration(
+          color: Colors.white12, shape: BoxShape.circle),
       child: Icon(icon, color: Colors.white, size: 16),
     );
   }
