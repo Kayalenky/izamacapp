@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../home/main_page.dart';
 
+// Bu sayfadan diğer sayfalara gideceksek ilgili importlar:
+import '../productCatalog/product_cat.dart';
+import '../services/services.dart';
+import '../settings/settings.dart';
+
 class AboutUsPage extends StatefulWidget {
   const AboutUsPage({super.key});
 
@@ -27,6 +32,81 @@ class _AboutUsPageState extends State<AboutUsPage> {
       _index = (_index + delta) % _pages.length;
       if (_index < 0) _index = _pages.length - 1;
     });
+  }
+
+  // ── MENÜ BOTTOM SHEET (MainPage ile aynı içerik)
+  void _openMenu() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1B1B1B),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        const green = Color(0xFF62E88D);
+
+        Widget item({
+          required IconData icon,
+          required String title,
+          required VoidCallback onTap,
+        }) {
+          return ListTile(
+            leading: Icon(icon, color: Colors.white),
+            title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+            trailing: const Icon(Icons.chevron_right, color: green),
+            onTap: () {
+              Navigator.pop(ctx);
+              onTap();
+            },
+          );
+        }
+
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 42, height: 4, margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(4)),
+                ),
+                item(
+                  icon: Icons.info_outline,
+                  title: 'Hakkımızda',
+                  onTap: () {
+                    // Zaten buradayız; istersen pop ile kalabilir ya da scroll top yapılabilir.
+                  },
+                ),
+                item(
+                  icon: Icons.view_module_rounded,
+                  title: 'Ürün Kataloğu',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ProductCatalogPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.handyman_outlined,
+                  title: 'Hizmetlerimiz',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ServicesPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.settings_suggest,
+                  title: 'Ayarlar',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SettingsPage()),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -117,7 +197,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
         ),
       ),
 
-      // ALT BAR — ev ikonu ana sayfaya döner
+      // ALT BAR — orta buton home, sağdaki menü
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: const BoxDecoration(
@@ -133,7 +213,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
               _BottomIcon(icon: Icons.qr_code_2, onTap: () {}),
               _BottomIcon(
                 icon: Icons.home_filled,
-                selected: true,
+                selected: false, // bu sayfa home değil
                 onTap: () {
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (_) => const MainPage()),
@@ -142,7 +222,10 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 },
               ),
               _BottomIcon(icon: Icons.settings_suggest, onTap: () {}),
-              _BottomIcon(icon: Icons.menu, onTap: () {}),
+              _BottomIcon(
+                icon: Icons.menu,
+                onTap: _openMenu, // <-- menüyü aç
+              ),
             ],
           ),
         ),

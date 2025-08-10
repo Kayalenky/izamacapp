@@ -1,8 +1,86 @@
 import 'package:flutter/material.dart';
-import '../home/main_page.dart';
+import '../home/main_page.dart';              // Home
+import '../aboutus/about_us.dart';             // Hakkımızda
+import '../productCatalog/product_cat.dart';  // Ürün Kataloğu
+import '../services/services.dart';           // Hizmetlerimiz
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
+
+  // ── MENÜ (bottom sheet)
+  void _openMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1B1B1B),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        const green = Color(0xFF62E88D);
+
+        Widget item({
+          required IconData icon,
+          required String title,
+          required VoidCallback onTap,
+        }) {
+          return ListTile(
+            leading: Icon(icon, color: Colors.white),
+            title: Text(title, style: const TextStyle(color: Colors.white)),
+            trailing: const Icon(Icons.chevron_right, color: green),
+            onTap: () {
+              Navigator.pop(ctx);
+              onTap();
+            },
+          );
+        }
+
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 42, height: 4, margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(4)),
+                ),
+                item(
+                  icon: Icons.info_outline,
+                  title: 'Hakkımızda',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const AboutUsPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.view_module_rounded,
+                  title: 'Ürün Kataloğu',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ProductCatalogPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.handyman_outlined,
+                  title: 'Hizmetlerimiz',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ServicesPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.settings_suggest,
+                  title: 'Ayarlar',
+                  onTap: () {
+                    // Zaten bu sayfadayız
+                  },
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +89,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: bg, // bar tam gri değil; sayfayla aynı renk
+        backgroundColor: bg, // bar sayfayla aynı renk
         elevation: 0,
         centerTitle: true,
         title: Container(
@@ -63,7 +141,7 @@ class SettingsPage extends StatelessWidget {
         ],
       ),
 
-      // ALT BAR — ortadaki ev ana sayfaya
+      // ALT BAR — ortadaki ev ana sayfaya, sağdaki menü bottom sheet
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: const BoxDecoration(
@@ -88,7 +166,7 @@ class SettingsPage extends StatelessWidget {
                 },
               ),
               _BottomIcon(icon: Icons.settings_suggest, onTap: _noop),
-              _BottomIcon(icon: Icons.menu, onTap: _noop),
+              _BottomIcon(icon: Icons.menu, onTap: () => _openMenu(context)),
             ],
           ),
         ),
@@ -174,9 +252,9 @@ class _BottomIcon extends StatelessWidget {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-        color: const Color.fromRGBO(0, 0, 0, 0.35),
-        shape: BoxShape.circle,
-        border: Border.all(color: selected ? color : Colors.white24),
+          color: const Color.fromRGBO(0, 0, 0, 0.35),
+          shape: BoxShape.circle,
+          border: Border.all(color: selected ? color : Colors.white24),
         ),
         child: Icon(icon, color: color),
       ),

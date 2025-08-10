@@ -1,8 +1,86 @@
 import 'package:flutter/material.dart';
-import '../home/main_page.dart'; // Ev ikonunda anasayfaya gitmek için
+import '../home/main_page.dart';              // Home'a dönüş
+import '../aboutus/about_us.dart';             // Hakkımızda
+import '../productCatalog/product_cat.dart';  // Ürün Kataloğu
+import '../settings/settings.dart';           // Ayarlar
 
 class ServicesPage extends StatelessWidget {
   const ServicesPage({super.key});
+
+  // ── MENÜ (bottom sheet)
+  void _openMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1B1B1B),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        const green = Color(0xFF62E88D);
+
+        Widget item({
+          required IconData icon,
+          required String title,
+          required VoidCallback onTap,
+        }) {
+          return ListTile(
+            leading: Icon(icon, color: Colors.white),
+            title: Text(title, style: const TextStyle(color: Colors.white)),
+            trailing: const Icon(Icons.chevron_right, color: green),
+            onTap: () {
+              Navigator.pop(ctx);
+              onTap();
+            },
+          );
+        }
+
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 42, height: 4, margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(4)),
+                ),
+                item(
+                  icon: Icons.info_outline,
+                  title: 'Hakkımızda',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const AboutUsPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.view_module_rounded,
+                  title: 'Ürün Kataloğu',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ProductCatalogPage()),
+                  ),
+                ),
+                item(
+                  icon: Icons.handyman_outlined,
+                  title: 'Hizmetlerimiz',
+                  onTap: () {
+                    // Zaten buradayız; istersen snackbar atılabilir.
+                  },
+                ),
+                item(
+                  icon: Icons.settings_suggest,
+                  title: 'Ayarlar',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SettingsPage()),
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +98,6 @@ class ServicesPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
         children: const [
-          // Kartlar
           _ServiceTile(
             title: 'Teknik Destek',
             subtitle: 'Geri dönüşüm makineleri için kurulum, bakım ve onarım.',
@@ -34,8 +111,7 @@ class ServicesPage extends StatelessWidget {
           SizedBox(height: 12),
           _ServiceTile(
             title: 'Yedek Parça Temini',
-            subtitle:
-                'Tüm makineler için orijinal parça temini sağlıyoruz.',
+            subtitle: 'Tüm makineler için orijinal parça temini sağlıyoruz.',
             details:
                 '• Üretici onaylı orijinal parçalar\n'
                 '• Kritik stok takip ve önerileri\n'
@@ -57,8 +133,7 @@ class ServicesPage extends StatelessWidget {
           SizedBox(height: 12),
           _ServiceTile(
             title: 'Danışmanlık',
-            subtitle:
-                'Uygun makina seçimi için uzman ekibimizle görüşün.',
+            subtitle: 'Uygun makina seçimi için uzman ekibimizle görüşün.',
             details:
                 '• İhtiyaç analizi ve saha keşfi\n'
                 '• Kapasite ve maliyet fizibilitesi\n'
@@ -70,8 +145,39 @@ class ServicesPage extends StatelessWidget {
         ],
       ),
 
-      // ALT ÇUBUK – önceki tasarımla aynı; Home anasayfaya döner
-      bottomNavigationBar: const _BottomBar(),
+      // ALT ÇUBUK – Home anasayfaya, Menü bottom sheet
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        decoration: const BoxDecoration(
+          color: Color(0xFF262626),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _RoundNavIcon(icon: Icons.person, onTap: () {}),
+              _RoundNavIcon(icon: Icons.qr_code_2, onTap: () {}),
+              _RoundNavIcon(
+                icon: Icons.home_filled,
+                selected: false, // bu sayfa home değil
+                onTap: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (_) => const MainPage()),
+                    (route) => false,
+                  );
+                },
+              ),
+              _RoundNavIcon(icon: Icons.settings_suggest, onTap: () {}),
+              _RoundNavIcon(
+                icon: Icons.menu,
+                onTap: () => _openMenu(context),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -147,13 +253,9 @@ class _ServiceTileState extends State<_ServiceTile> {
                   padding: const EdgeInsets.only(top: 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Divider(color: Colors.white24, thickness: 0.6),
-                      const SizedBox(height: 8),
-                      Text(
-                        widget.details,
-                        style: const TextStyle(height: 1.35),
-                      ),
+                    children: const [
+                      Divider(color: Colors.white24, thickness: 0.6),
+                      SizedBox(height: 8),
                     ],
                   ),
                 ),
@@ -162,6 +264,15 @@ class _ServiceTileState extends State<_ServiceTile> {
                     ? CrossFadeState.showSecond
                     : CrossFadeState.showFirst,
               ),
+
+              if (_expanded)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    widget.details,
+                    style: const TextStyle(height: 1.35),
+                  ),
+                ),
             ],
           ),
         ),
@@ -170,46 +281,7 @@ class _ServiceTileState extends State<_ServiceTile> {
   }
 }
 
-/* ===================== Alt Bar (Home anasayfaya gider) ===================== */
-
-class _BottomBar extends StatelessWidget {
-  const _BottomBar();
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-      decoration: const BoxDecoration(
-        color: Color(0xFF262626),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _RoundNavIcon(icon: Icons.person, onTap: () {}),
-            _RoundNavIcon(icon: Icons.qr_code_2, onTap: () {}),
-            // HOME → anasayfaya yönlendir
-            _RoundNavIcon(
-              icon: Icons.home_filled,
-              selected: true,
-              onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const MainPage()),
-                  (route) => false,
-                );
-              },
-            ),
-            _RoundNavIcon(icon: Icons.settings_suggest, onTap: () {}),
-            _RoundNavIcon(icon: Icons.menu, onTap: () {}),
-          ],
-        ),
-      ),
-    );
-  }
-}
+/* ===================== Alt Bar (ikon) ===================== */
 
 class _RoundNavIcon extends StatelessWidget {
   const _RoundNavIcon({
