@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:izamacapp/pages/login/hesapolustur.dart';
+import 'package:izamacapp/pages/login/sifremiunuttum.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -11,7 +12,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ekran boyutları
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -24,31 +24,21 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // LOGO
+                // Üstte çark ikonu
                 SizedBox(
                   height: screenHeight * 0.20,
                   width: screenHeight * 0.15,
-                  child: Center(
-                    child: Text(
-                      'log',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: screenWidth * 0.12,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            blurRadius: 10,
-                            offset: const Offset(0, 0),
-                          ),
-                        ],
-                      ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.settings, // çark
+                      color: Colors.white,
+                      size: 96,
                     ),
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.05),
 
-                // GİRİŞ ALANI KARTI
+                // Kart
                 Container(
                   padding: EdgeInsets.all(screenWidth * 0.06),
                   decoration: BoxDecoration(
@@ -58,12 +48,15 @@ class LoginPage extends StatelessWidget {
                   ),
                   child: Column(
                     children: <Widget>[
-                      // Kullanıcı adı / e-posta
+                      // Telefon/E-posta
                       TextField(
+                        keyboardType: TextInputType.emailAddress,
+                        style: const TextStyle(color: Colors.black), // yazı siyah
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Telefon numarası veya E-posta',
+                          hintText: 'Telefon numarası ya da eposta',
+                          hintStyle: const TextStyle(color: Colors.black), // placeholder siyah
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -79,10 +72,12 @@ class LoginPage extends StatelessWidget {
                       // Şifre
                       TextField(
                         obscureText: true,
+                        style: const TextStyle(color: Colors.black), // yazı siyah
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Şifre',
+                          hintText: 'şifre',
+                          hintStyle: const TextStyle(color: Colors.black), // placeholder siyah
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -95,7 +90,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: screenHeight * 0.02),
 
-                      // Şifremi unuttum
+                      // Şifremi unuttum → GirisSorunuSayfasi
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
@@ -103,7 +98,7 @@ class LoginPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                              builder: (_) => HesapOlusturSayfasi(),
+                                builder: (_) => const GirisSorunuSayfasi(),
                               ),
                             );
                           },
@@ -118,7 +113,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: screenHeight * 0.01),
 
-                      // Giriş butonu
+                      // Giriş
                       ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
@@ -142,12 +137,11 @@ class LoginPage extends StatelessWidget {
                       // Ayraç
                       Row(
                         children: <Widget>[
-                          const Expanded(
-                            child: Divider(color: accentGreen),
-                          ),
+                          const Expanded(child: Divider(color: accentGreen)),
                           Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: screenWidth * 0.04),
+                              horizontal: screenWidth * 0.04,
+                            ),
                             child: Text(
                               'Ya da',
                               style: TextStyle(
@@ -156,9 +150,7 @@ class LoginPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Expanded(
-                            child: Divider(color: accentGreen),
-                          ),
+                          const Expanded(child: Divider(color: accentGreen)),
                         ],
                       ),
                       SizedBox(height: screenHeight * 0.03),
@@ -169,7 +161,7 @@ class LoginPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                            builder: (_) => HesapOlusturSayfasi(),
+                              builder: (_) => const HesapOlusturSayfasi(),
                             ),
                           );
                         },
