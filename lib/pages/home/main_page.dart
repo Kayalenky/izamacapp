@@ -1,11 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-// lib/pages/home/main_page.dart (en üst kısım)
 import 'package:izamacapp/pages/aboutus/about_us.dart';
+import 'package:izamacapp/pages/login/giris.dart';
 import 'package:izamacapp/pages/productCatalog/product_cat.dart';
 import 'package:izamacapp/pages/services/services.dart';
 import 'package:izamacapp/pages/settings/settings.dart';
-
+import 'package:izamacapp/pages/services/auth_service.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -20,6 +21,49 @@ class _MainPageState extends State<MainPage> {
   int _prodIndex = 0;
   int _promoIndex = 0;
 
+  String _userName = 'Misafir';
+  final AuthService _authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (mounted && userDoc.exists) {
+          setState(() {
+            _userName = userDoc.get('adSoyad') ?? 'Kullanıcı';
+          });
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _userName = 'Kullanıcı';
+          });
+        }
+      }
+    }
+  }
+
+  Future<void> _signOut() async {
+    await _authService.signOut();
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+        (route) => false,
+      );
+    }
+  }
+
   final _productImages = const [
     'https://images.unsplash.com/photo-1581091215367-59ab6b321416?q=80&w=1200&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',
@@ -31,7 +75,6 @@ class _MainPageState extends State<MainPage> {
     'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop',
   ];
 
-  // ── MENÜ BOTTOM SHEET
   void _openMenu() {
     showModalBottomSheet(
       context: context,
@@ -46,12 +89,15 @@ class _MainPageState extends State<MainPage> {
           required IconData icon,
           required String title,
           required VoidCallback onTap,
+          Color? color,
         }) {
           return ListTile(
-            leading: Icon(icon, color: Colors.white),
-            title: Text(title,
-                style: const TextStyle(color: Colors.white, fontSize: 16)),
-            trailing: const Icon(Icons.chevron_right, color: green),
+            leading: Icon(icon, color: color ?? Colors.white),
+            title: Text(
+              title,
+              style: TextStyle(color: color ?? Colors.white, fontSize: 16),
+            ),
+            trailing: Icon(Icons.chevron_right, color: color ?? green),
             onTap: () {
               Navigator.pop(ctx);
               onTap();
@@ -87,7 +133,8 @@ class _MainPageState extends State<MainPage> {
                   title: 'Ürün Kataloğu',
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (_) => const ProductCatalogPage()),
+                      builder: (_) => const ProductCatalogPage(),
+                    ),
                   ),
                 ),
                 item(
@@ -104,6 +151,19 @@ class _MainPageState extends State<MainPage> {
                     MaterialPageRoute(builder: (_) => const SettingsPage()),
                   ),
                 ),
+                if (_userName != 'Misafir') ...[
+                  const Divider(
+                    color: Colors.white24,
+                    height: 1,
+                    thickness: 0.5,
+                  ),
+                  item(
+                    icon: Icons.logout,
+                    title: 'Çıkış Yap',
+                    onTap: _signOut,
+                    color: Colors.redAccent,
+                  ),
+                ],
                 const SizedBox(height: 8),
               ],
             ),
@@ -125,9 +185,7 @@ class _MainPageState extends State<MainPage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const _Header(green: green),
-
-            // PRODUCT SLIDER + TITLE + DESC
+            _Header(green: green, userName: _userName),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
               child: Container(
@@ -170,8 +228,6 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-
-            // PROMO SLIDER (biraz daraltıldı)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Column(
@@ -197,12 +253,13 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 8),
             const Divider(
-                color: Colors.white24, thickness: 0.6, indent: 14, endIndent: 14),
-
-            // CONTACT (daraltıldı)
+              color: Colors.white24,
+              thickness: 0.6,
+              indent: 14,
+              endIndent: 14,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
               child: Column(
@@ -220,17 +277,13 @@ class _MainPageState extends State<MainPage> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 8),
-
                   _ContactLine(icon: Icons.phone, text: '+90 364 606 06 22'),
                   _ContactLine(icon: Icons.phone, text: '+90 532 566 69 89'),
                   _ContactLine(icon: Icons.email, text: 'iza@izamakina.com'),
-
                   SizedBox(height: 10),
                 ],
               ),
             ),
-
-            // Sosyal ikonlar
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
@@ -245,8 +298,6 @@ class _MainPageState extends State<MainPage> {
           ],
         ),
       ),
-
-      // CUSTOM BOTTOM BAR
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
         decoration: const BoxDecoration(
@@ -262,7 +313,6 @@ class _MainPageState extends State<MainPage> {
               const _RoundNavIcon(icon: Icons.qr_code_2),
               const _RoundNavIcon(icon: Icons.home_filled, selected: true),
               const _RoundNavIcon(icon: Icons.settings_suggest),
-              // MENÜ İKONU — bottom sheet
               GestureDetector(
                 onTap: _openMenu,
                 child: const _RoundNavIcon(icon: Icons.menu),
@@ -275,11 +325,10 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-/* ===================== WIDGETS ===================== */
-
 class _Header extends StatelessWidget {
-  const _Header({required this.green});
+  const _Header({required this.green, required this.userName});
   final Color green;
+  final String userName;
 
   @override
   Widget build(BuildContext context) {
@@ -288,8 +337,10 @@ class _Header extends StatelessWidget {
         AspectRatio(
           aspectRatio: 16 / 7,
           child: ColorFiltered(
-            colorFilter:
-                const ColorFilter.mode(Colors.black54, BlendMode.darken),
+            colorFilter: const ColorFilter.mode(
+              Colors.black54,
+              BlendMode.darken,
+            ),
             child: Image.network(
               'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1600&auto=format&fit=crop',
               fit: BoxFit.cover,
@@ -312,23 +363,26 @@ class _Header extends StatelessWidget {
                 child: const Text(
                   'İZA',
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white10,
                   borderRadius: BorderRadius.circular(22),
                   border: Border.all(color: Colors.white24),
                 ),
-                child: const Text(
-                  'Hoş geldin, Kullanıcı/Misafir',
-                  style: TextStyle(color: Colors.white, fontSize: 15),
+                child: Text(
+                  'Hoş geldin, $userName',
+                  style: const TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
             ],
@@ -405,8 +459,7 @@ class _Carousel extends StatelessWidget {
                 color: const Color.fromRGBO(18, 52, 86, 0.9),
                 borderRadius: BorderRadius.circular(6),
               ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: pillTopRight,
             ),
           ),
@@ -471,8 +524,7 @@ class _Dots extends StatelessWidget {
         (i) => Container(
           width: 6,
           height: 6,
-          margin:
-              const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+          margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: i == index ? Colors.white : Colors.white24,
@@ -493,8 +545,7 @@ class _ContactLine extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: const BoxDecoration(
-        border:
-            Border(bottom: BorderSide(color: Colors.white24, width: .5)),
+        border: Border(bottom: BorderSide(color: Colors.white24, width: .5)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -527,7 +578,9 @@ class _SocialDot extends StatelessWidget {
       height: 28,
       margin: const EdgeInsets.only(right: 8),
       decoration: const BoxDecoration(
-          color: Colors.white12, shape: BoxShape.circle),
+        color: Colors.white12,
+        shape: BoxShape.circle,
+      ),
       child: Icon(icon, color: Colors.white, size: 16),
     );
   }

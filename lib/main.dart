@@ -1,10 +1,15 @@
+// main.dart
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:izamacapp/firebase_options.dart';
+import 'package:izamacapp/pages/login/giris.dart';
 
-// Sayfalar
-import 'pages/login/giris.dart';
-
-
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -13,8 +18,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Buradan başlangıç sayfasını seç
-    const Widget startPage = LoginPage(); // <--- Burayı değiştir
+    const Widget startPage = LoginPage();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

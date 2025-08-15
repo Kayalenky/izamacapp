@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../home/main_page.dart';              // Home
-import '../aboutus/about_us.dart';             // Hakkımızda
-import '../productCatalog/product_cat.dart';  // Ürün Kataloğu
-import '../services/services.dart';           // Hizmetlerimiz
+import '../home/main_page.dart'; // Home
+import '../aboutus/about_us.dart'; // Hakkımızda
+import '../productCatalog/product_cat.dart'; // Ürün Kataloğu
+import '../services/services.dart'; // Hizmetlerimiz
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -42,8 +42,13 @@ class SettingsPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 42, height: 4, margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(4)),
+                  width: 42,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
                 item(
                   icon: Icons.info_outline,
@@ -56,7 +61,9 @@ class SettingsPage extends StatelessWidget {
                   icon: Icons.view_module_rounded,
                   title: 'Ürün Kataloğu',
                   onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const ProductCatalogPage()),
+                    MaterialPageRoute(
+                      builder: (_) => const ProductCatalogPage(),
+                    ),
                   ),
                 ),
                 item(
@@ -95,7 +102,7 @@ class SettingsPage extends StatelessWidget {
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.white12,          // sadece yazı kadar gri kapsül
+            color: Colors.white12, // sadece yazı kadar gri kapsül
             borderRadius: BorderRadius.circular(10),
           ),
           child: const Text(
@@ -127,13 +134,19 @@ class SettingsPage extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 180, 20, 24),
             child: Column(
               children: const [
-                _SettingsItemRow(icon: Icons.person,          title: 'Hesap'),
+                _SettingsItemRow(icon: Icons.person, title: 'Hesap'),
                 _GreenLine(),
-                _SettingsItemRow(icon: Icons.notifications_active_rounded, title: 'Bildirimler'),
+                _SettingsItemRow(
+                  icon: Icons.notifications_active_rounded,
+                  title: 'Bildirimler',
+                ),
                 _GreenLine(),
-                _SettingsItemRow(icon: Icons.lock_rounded,    title: 'Gizlilik'),
+                _SettingsItemRow(icon: Icons.lock_rounded, title: 'Gizlilik'),
                 _GreenLine(),
-                _SettingsItemRow(icon: Icons.help_outline_rounded, title: 'Yardım'),
+                _SettingsItemRow(
+                  icon: Icons.help_outline_rounded,
+                  title: 'Yardım',
+                ),
                 _GreenLine(),
               ],
             ),

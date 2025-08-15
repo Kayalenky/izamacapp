@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1097750035726",
+    "project_id": "geridonusum-52c78",
+    "storage_bucket": "geridonusum-52c78.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097750035726:android:71c2ced8707be75885eb5f",
+        "android_client_info": {
+          "package_name": "com.example.izamacapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7-H0Dfx-t613Fa-x5kiErfy-mZZL3nVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097750035726:android:a97840c3c2d80b0985eb5f",
+        "android_client_info": {
+          "package_name": "com.izamakine.geridonusum"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7-H0Dfx-t613Fa-x5kiErfy-mZZL3nVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

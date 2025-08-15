@@ -52,7 +52,10 @@ class _AboutUsPageState extends State<AboutUsPage> {
         }) {
           return ListTile(
             leading: Icon(icon, color: Colors.white),
-            title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+            title: Text(
+              title,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
             trailing: const Icon(Icons.chevron_right, color: green),
             onTap: () {
               Navigator.pop(ctx);
@@ -69,8 +72,13 @@ class _AboutUsPageState extends State<AboutUsPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 42, height: 4, margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(4)),
+                  width: 42,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
                 item(
                   icon: Icons.info_outline,
@@ -83,7 +91,9 @@ class _AboutUsPageState extends State<AboutUsPage> {
                   icon: Icons.view_module_rounded,
                   title: 'Ürün Kataloğu',
                   onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const ProductCatalogPage()),
+                    MaterialPageRoute(
+                      builder: (_) => const ProductCatalogPage(),
+                    ),
                   ),
                 ),
                 item(
@@ -270,7 +280,11 @@ class _InfoCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             text,
-            style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+              height: 1.4,
+            ),
           ),
         ],
       ),
@@ -318,7 +332,11 @@ class _GridFour extends StatelessWidget {
 }
 
 class _MiniCard extends StatelessWidget {
-  const _MiniCard({required this.width, required this.height, required this.text});
+  const _MiniCard({
+    required this.width,
+    required this.height,
+    required this.text,
+  });
 
   final double width;
   final double height;
@@ -341,7 +359,11 @@ class _MiniCard extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: const TextStyle(color: Colors.white70, fontSize: 12.5, height: 1.25),
+        style: const TextStyle(
+          color: Colors.white70,
+          fontSize: 12.5,
+          height: 1.25,
+        ),
       ),
     );
   }

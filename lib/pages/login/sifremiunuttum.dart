@@ -1,13 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:izamacapp/pages/login/hesapolustur.dart';
+import 'package:izamacapp/pages/services/auth_service.dart';
 
-class GirisSorunuSayfasi extends StatelessWidget {
+class GirisSorunuSayfasi extends StatefulWidget {
   const GirisSorunuSayfasi({super.key});
 
-  // Sabit renkler
+  @override
+  State<GirisSorunuSayfasi> createState() => _GirisSorunuSayfasiState();
+}
+
+class _GirisSorunuSayfasiState extends State<GirisSorunuSayfasi> {
   static const Color brandGreen = Color.fromARGB(255, 1, 96, 4);
   static const Color accentGreen = Color.fromARGB(255, 0, 232, 12);
   static const Color cardColor = Color(0xFF1E1E1E);
+
+  final TextEditingController _emailController = TextEditingController();
+  final AuthService _authService = AuthService();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _sendResetLink() async {
+    if (_emailController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Lütfen e-posta adresinizi girin.'),
+        ),
+      );
+      return;
+    }
+    setState(() => _isLoading = true);
+
+    try {
+      await _authService.sendPasswordResetEmail(_emailController.text.trim());
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+                'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.'),
+          ),
+        );
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(e.toString()),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +78,6 @@ class GirisSorunuSayfasi extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // LOGO
                 SizedBox(
                   height: screenHeight * 0.12,
                   width: screenWidth * 0.35,
@@ -33,11 +87,11 @@ class GirisSorunuSayfasi extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: screenWidth * 0.12,
-                        shadows: [
+                        shadows: const [
                           Shadow(
-                          color: Color.fromRGBO(158, 158, 158, 0.5),
+                            color: Color.fromRGBO(158, 158, 158, 0.5),
                             blurRadius: 10,
-                            offset: const Offset(0, 0),
+                            offset: Offset(0, 0),
                           ),
                         ],
                       ),
@@ -45,8 +99,6 @@ class GirisSorunuSayfasi extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.05),
-
-                // KART
                 Container(
                   padding: EdgeInsets.all(screenWidth * 0.06),
                   decoration: BoxDecoration(
@@ -67,7 +119,7 @@ class GirisSorunuSayfasi extends StatelessWidget {
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       Text(
-                        'E-posta adresini, telefon numaranı veya kullanıcı adını gir; hesabına yeniden girebilmen için sana bir bağlantı gönderelim.',
+                        'E-posta adresini gir; hesabına yeniden girebilmen için sana bir bağlantı gönderelim.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white70,
@@ -75,13 +127,14 @@ class GirisSorunuSayfasi extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.03),
-
-                      // Girdi
                       TextField(
+                        controller: _emailController,
+                        style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: 'Telefon numarası veya E-posta',
+                          hintText: 'E-posta',
+                          hintStyle: const TextStyle(color: Colors.black),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -93,12 +146,8 @@ class GirisSorunuSayfasi extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
-
-                      // Bağlantı gönder
                       ElevatedButton(
-                        onPressed: () {
-
-                        },
+                        onPressed: _isLoading ? null : _sendResetLink,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
@@ -109,17 +158,19 @@ class GirisSorunuSayfasi extends StatelessWidget {
                             screenHeight * 0.06,
                           ),
                         ),
-                        child: Text(
-                          'Giriş bağlantısı gönder',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: screenWidth * 0.045,
-                          ),
-                        ),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.black,
+                              )
+                            : Text(
+                                'Giriş bağlantısı gönder',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: screenWidth * 0.045,
+                                ),
+                              ),
                       ),
                       SizedBox(height: screenHeight * 0.03),
-
-                      // Ayraç
                       Row(
                         children: <Widget>[
                           const Expanded(child: Divider(color: accentGreen)),
@@ -139,8 +190,6 @@ class GirisSorunuSayfasi extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: screenHeight * 0.03),
-
-                      // Yeni hesap oluştur
                       TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -159,7 +208,10 @@ class GirisSorunuSayfasi extends StatelessWidget {
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(color: Colors.white, width: 2),
+                            side: const BorderSide(
+                              color: Colors.white,
+                              width: 2,
+                            ),
                           ),
                         ),
                         child: Text(
